@@ -6,6 +6,6 @@ int main() {
     // tokenize and parse it
     // generate LLVM IR
     // compiler generated LLVM IR
-    cout << "Hello World" << endl;
+    Lexer::test();
     return 0;
 }
