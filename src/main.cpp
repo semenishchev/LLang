@@ -7,5 +7,6 @@ int main() {
     // generate LLVM IR
     // compiler generated LLVM IR
     Lexer::test();
+
     return 0;
 }

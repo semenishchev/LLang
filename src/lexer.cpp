@@ -165,6 +165,7 @@ Token Lexer::next() noexcept {
     case 'Y':
     case 'Z':
     case '@':
+    case '~':
       return identifier();
     case '0':
     case '1':

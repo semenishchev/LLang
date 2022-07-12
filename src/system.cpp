@@ -1,7 +1,8 @@
 #include <iostream>
 
 // The string implementation for type 'String'
-class String : public std::string {
+namespace {
+    class String : public std::string {
     public:
         String(const char* c) : std::string(c) {}
         String replace (String from, String to) {
@@ -20,6 +21,7 @@ class String : public std::string {
                 std::string::replace(start_pos, from.length(), to);
                 start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
             }
-            return *this;   
+            return *this;
         }
-};
+    };
+}
