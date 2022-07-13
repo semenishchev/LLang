@@ -320,19 +320,31 @@ Token Lexer::equal_or_equals() noexcept {
 }
 
 #include <iomanip>
-#include <iostream>
+
+std::string Token::kind_str() {
+    static const char* const names[]{
+            "Number",      "Identifier",  "LeftParen",  "RightParen", "LeftSquare",
+            "RightSquare", "LeftCurly",   "RightCurly", "LessThan", "LessOrEquals",
+            "GreaterThan", "GreaterOrEquals",
+            "Equal",       "Plus",        "Minus",      "Asterisk",   "Slash",
+            "Hash",        "Dot",         "Comma",      "Colon",      "Semicolon",
+            "SingleQuote", "DoubleQuote", "Comment",    "BinaryOperator", "And", "Or",
+            "Equals",        "End",          "Unexpected",
+    };
+    return names[static_cast<int>(m_kind)];
+}
 
 std::ostream& operator<<(std::ostream& os, const Token::Kind& kind) {
-  static const char* const names[]{
-      "Number",      "Identifier",  "LeftParen",  "RightParen", "LeftSquare",
-      "RightSquare", "LeftCurly",   "RightCurly", "LessThan", "LessOrEquals", 
-      "GreaterThan", "GreaterOrEquals",
-      "Equal",       "Plus",        "Minus",      "Asterisk",   "Slash",
-      "Hash",        "Dot",         "Comma",      "Colon",      "Semicolon",
-      "SingleQuote", "DoubleQuote", "Comment",    "BinaryOperator", "And", "Or",
-      "Equals",        "End",          "Unexpected",
-  };
-  return os << names[static_cast<int>(kind)];
+    static const char* const names[]{
+            "Number",      "Identifier",  "LeftParen",  "RightParen", "LeftSquare",
+            "RightSquare", "LeftCurly",   "RightCurly", "LessThan", "LessOrEquals",
+            "GreaterThan", "GreaterOrEquals",
+            "Equal",       "Plus",        "Minus",      "Asterisk",   "Slash",
+            "Hash",        "Dot",         "Comma",      "Colon",      "Semicolon",
+            "SingleQuote", "DoubleQuote", "Comment",    "BinaryOperator", "And", "Or",
+            "Equals",        "End",          "Unexpected",
+    };
+    return os << names[static_cast<int>(kind)];
 }
 
 void Lexer::test() {

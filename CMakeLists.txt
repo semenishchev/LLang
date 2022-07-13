@@ -12,7 +12,7 @@ add_definitions("${LLVM_DEFINITION}")
 add_executable(LLang
         src/main.cpp
         src/lexer.cpp
-        )
+        src/ast.cpp)
 
 add_compile_options(llvm-config --ldflags --libs)
 

@@ -1,8 +1,10 @@
-//
-// Created by Sasha on 13.07.2022.
-//
+#include <string>
 
-#ifndef LLANG_SYSTEM_H
-#define LLANG_SYSTEM_H
-
-#endif //LLANG_SYSTEM_H
+namespace types {
+    class String : public std::string {
+    public:
+        String(const char* c) : std::string(c) {}
+        String replace (String& from, String& to);
+        String replace_all (String& from, String& to);
+    };
+}

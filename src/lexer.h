@@ -47,6 +47,7 @@ class Token {
   Kind kind() const noexcept { return m_kind; }
 
   void kind(Kind kind) noexcept { m_kind = kind; }
+  std::string kind_str();
 
   bool is(Kind kind) const noexcept { return m_kind == kind; }
 
@@ -72,7 +73,9 @@ class Token {
 
 class Lexer {
  public:
-  Lexer(const char* beg) noexcept : m_beg{beg} {}
+  Lexer(const char* beg) noexcept : m_beg{beg} {
+      std::cout << beg << std::endl;
+  }
 
   Token next() noexcept;
   static void test();
