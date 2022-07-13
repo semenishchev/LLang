@@ -1,4 +1,7 @@
+#pragma once
+
 #include <iostream>
+#include <vector>
 
 class Token {
  public:
@@ -36,6 +39,8 @@ class Token {
     Unexpected,
   };
 
+  Token() : m_kind{Kind::Unexpected} {}
+
   Token(Kind kind) noexcept : m_kind{kind} {}
 
   Token(Kind kind, const char* beg, std::size_t len) noexcept
@@ -50,6 +55,10 @@ class Token {
   std::string kind_str();
 
   bool is(Kind kind) const noexcept { return m_kind == kind; }
+
+  std::string to_string() {
+      return "Token " + kind_str() + "=" + lexeme();
+  }
 
   bool is_not(Kind kind) const noexcept { return m_kind != kind; }
 
@@ -74,7 +83,6 @@ class Token {
 class Lexer {
  public:
   Lexer(const char* beg) noexcept : m_beg{beg} {
-      std::cout << beg << std::endl;
   }
 
   Token next() noexcept;
