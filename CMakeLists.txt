@@ -12,7 +12,8 @@ add_definitions("${LLVM_DEFINITION}")
 add_executable(
         src/main.cpp
         src/lexer.cpp
-        src/ast.cpp)
+        src/ast.cpp
+        src/parser.cpp src/parser.h)
 
 add_compile_options(llvm-config --ldflags --libs)
 

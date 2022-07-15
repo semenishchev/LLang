@@ -95,7 +95,6 @@ bool is_identifier_char(char c) noexcept {
     case '8':
     case '9':
     case '_':
-    case '@':
       return true;
     default:
       return false;
@@ -214,6 +213,10 @@ Token Lexer::next() noexcept {
       return atom(Token::Kind::SingleQuote);
     case '"':
       return atom(Token::Kind::DoubleQuote);
+    case '^':
+      return atom(Token::Kind::BinaryOperator);
+    case '?':
+      return atom(Token::Kind::Unary);
     case '<':
     case '>':
         return math_or_binary_operator();
@@ -322,16 +325,7 @@ Token Lexer::equal_or_equals() noexcept {
 #include <iomanip>
 
 std::string Token::kind_str() {
-    static const char* const names[]{
-            "Number",      "Identifier",  "LeftParen",  "RightParen", "LeftSquare",
-            "RightSquare", "LeftCurly",   "RightCurly", "LessThan", "LessOrEquals",
-            "GreaterThan", "GreaterOrEquals",
-            "Equal",       "Plus",        "Minus",      "Asterisk",   "Slash",
-            "Hash",        "Dot",         "Comma",      "Colon",      "Semicolon",
-            "SingleQuote", "DoubleQuote", "Comment",    "BinaryOperator", "And", "Or",
-            "Equals",        "End",          "Unexpected",
-    };
-    return names[static_cast<int>(m_kind)];
+    return kind_to_string(m_kind);
 }
 
 std::ostream& operator<<(std::ostream& os, const Token::Kind& kind) {

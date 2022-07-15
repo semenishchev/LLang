@@ -40,6 +40,7 @@ void main() {
         return age < 100
     })
     developer.checker(123) // will actually call user-defined method with `123` as args
+    println(developer.getName == "Sasha" ? "This program runs by the developer of the language" : "User-code")
     println(developer.getName() + " ${developer.phoneNumber()}")
 
     // if we don't call `delete developer`, compiler will give us an error, because all objects must be freed, but where - it's developer's decision

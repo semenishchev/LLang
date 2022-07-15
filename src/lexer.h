@@ -35,6 +35,7 @@ class Token {
     And,
     Or,
     Equals,
+    Unary,
     End,
     Unexpected,
   };
@@ -42,6 +43,19 @@ class Token {
   Token() : m_kind{Kind::Unexpected} {}
 
   Token(Kind kind) noexcept : m_kind{kind} {}
+
+  static std::string kind_to_string(Kind kind) {
+      static const char* const names[]{
+              "Number",      "Identifier",  "LeftParen",  "RightParen", "LeftSquare",
+              "RightSquare", "LeftCurly",   "RightCurly", "LessThan", "LessOrEquals",
+              "GreaterThan", "GreaterOrEquals",
+              "Equal",       "Plus",        "Minus",      "Asterisk",   "Slash",
+              "Hash",        "Dot",         "Comma",      "Colon",      "Semicolon",
+              "SingleQuote", "DoubleQuote", "Comment",    "BinaryOperator", "And", "Or",
+              "Equals", "Unary",       "End",          "Unexpected",
+      };
+      return names[static_cast<int>(kind)];
+  }
 
   Token(Kind kind, const char* beg, std::size_t len) noexcept
       : m_kind{kind}, m_lexeme(beg, len) {}

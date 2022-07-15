@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "ast.h"
+#include "parser.h"
 #include "lexer.h"
 
 using std::cout;
