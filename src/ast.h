@@ -6,7 +6,7 @@
 #include "lexer.h"
 #include "system.h"
 
-using move;
+using std::move;
 
 namespace ast {
     class ExprAST {

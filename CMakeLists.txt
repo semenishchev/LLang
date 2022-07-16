@@ -11,7 +11,7 @@ add_definitions("${LLVM_DEFINITION}")
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-add_executable(LLang src/main.cpp src/lexer.cpp src/parser.cpp src/ast.cpp src/system.cpp)
+add_executable(LLang src/main.cpp src/lexer.cpp src/parser.cpp src/system.cpp)
 
 add_compile_options(llvm-config --ldflags --libs)
 

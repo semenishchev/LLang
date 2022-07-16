@@ -1,5 +1,4 @@
 #include "main.h"
-#include <sys/stat.h>
 
 char* get_cmd_option(char** begin, char** end, const std::string & option) {
     char ** itr = std::find(begin, end, option);
