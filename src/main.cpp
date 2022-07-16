@@ -39,7 +39,9 @@ int main(int argc, char* argv[]) {
             std::cout << token.to_string() << std::endl;
         }
         ast::Parser parser(tokens);
-
+        std::for_each(parser.parse().begin(), parser.parse().end(), [](auto& expr) {
+            std::cout << expr->to_string() << std::endl;
+        });
         delete tokens;
     } else {
         cout << "No file specified. Use -f flag to specify a file to compile" << endl;
