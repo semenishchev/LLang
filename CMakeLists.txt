@@ -9,10 +9,11 @@ find_package(LLVM REQUIRED CONFIG)
 include_directories("${LLVM_INCLUDE_DIRS}")
 add_definitions("${LLVM_DEFINITION}")
 
-add_executable(LLang
+add_executable(
         src/main.cpp
         src/lexer.cpp
-        )
+        src/ast.cpp
+        src/parser.cpp src/parser.h)
 
 add_compile_options(llvm-config --ldflags --libs)
 

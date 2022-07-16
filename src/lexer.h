@@ -1,4 +1,7 @@
+#pragma once
+
 #include <iostream>
+#include <vector>
 
 class Token {
  public:
@@ -32,11 +35,27 @@ class Token {
     And,
     Or,
     Equals,
+    Unary,
     End,
     Unexpected,
   };
 
+  Token() : m_kind{Kind::Unexpected} {}
+
   Token(Kind kind) noexcept : m_kind{kind} {}
+
+  static std::string kind_to_string(Kind kind) {
+      static const char* const names[]{
+              "Number",      "Identifier",  "LeftParen",  "RightParen", "LeftSquare",
+              "RightSquare", "LeftCurly",   "RightCurly", "LessThan", "LessOrEquals",
+              "GreaterThan", "GreaterOrEquals",
+              "Equal",       "Plus",        "Minus",      "Asterisk",   "Slash",
+              "Hash",        "Dot",         "Comma",      "Colon",      "Semicolon",
+              "SingleQuote", "DoubleQuote", "Comment",    "BinaryOperator", "And", "Or",
+              "Equals", "Unary",       "End",          "Unexpected",
+      };
+      return names[static_cast<int>(kind)];
+  }
 
   Token(Kind kind, const char* beg, std::size_t len) noexcept
       : m_kind{kind}, m_lexeme(beg, len) {}
@@ -47,8 +66,13 @@ class Token {
   Kind kind() const noexcept { return m_kind; }
 
   void kind(Kind kind) noexcept { m_kind = kind; }
+  std::string kind_str();
 
   bool is(Kind kind) const noexcept { return m_kind == kind; }
+
+  std::string to_string() {
+      return "Token " + kind_str() + "=" + lexeme();
+  }
 
   bool is_not(Kind kind) const noexcept { return m_kind != kind; }
 
@@ -72,7 +96,8 @@ class Token {
 
 class Lexer {
  public:
-  Lexer(const char* beg) noexcept : m_beg{beg} {}
+  Lexer(const char* beg) noexcept : m_beg{beg} {
+  }
 
   Token next() noexcept;
   static void test();
