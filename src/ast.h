@@ -190,9 +190,9 @@ namespace ast {
     class CallExprAST : public ExprAST {
     public:
         std::string callee;
-        std::vector<std::pair<std::string, ExprAST>> args;
+        std::vector<ExprAST> args;
         CallExprAST(std::string Callee,
-                    std::vector<std::pair<std::string, ExprAST>> args)
+                    std::vector<ExprAST> args)
                 : callee(move(Callee)), args(move(args)) {}
     };
 }
