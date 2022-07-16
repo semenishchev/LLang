@@ -182,7 +182,7 @@ namespace ast {
     public:
         std::unique_ptr<ExprAST> condition;
         std::vector<std::unique_ptr<ExprAST>> initial_branch;
-        std::vector<std::vector<std::unique_ptr<ExprAST>>> else_if_branches;
+        std::vector<std::pair<std::unique_ptr<ExprAST>, std::vector<std::unique_ptr<ExprAST>>>> else_if_branches; // list of pairs (condition, branch)
         std::vector<std::unique_ptr<ExprAST>> else_branch;
     };
 
