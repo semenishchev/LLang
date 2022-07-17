@@ -24,9 +24,20 @@ bool is_digit(char c) noexcept {
     case '7':
     case '8':
     case '9':
+      case '.':
       return true;
     default:
       return false;
+  }
+}
+
+bool is_quote(char c) noexcept {
+  switch (c) {
+    case '\'':
+    case '\"':
+      return false;
+    default:
+      return true;
   }
 }
 
@@ -105,7 +116,6 @@ Token Lexer::atom(Token::Kind kind) noexcept { return Token(kind, m_beg++, 1); }
 
 Token Lexer::next() noexcept {
   while (is_space(peek())) get();
-
   switch (peek()) {
     case '\0':
       return Token(Token::Kind::End, m_beg, 1);
@@ -210,9 +220,9 @@ Token Lexer::next() noexcept {
     case ';':
       return atom(Token::Kind::Semicolon);
     case '\'':
-      return atom(Token::Kind::SingleQuote);
+        return parse_string('\'');
     case '"':
-      return atom(Token::Kind::DoubleQuote);
+      return parse_string('"');
     case '^':
       return atom(Token::Kind::BinaryOperator);
     case '?':
@@ -237,6 +247,31 @@ Token Lexer::number() noexcept {
   get();
   while (is_digit(peek())) get();
   return Token(Token::Kind::Number, start, m_beg);
+}
+
+bool is_string(char c) noexcept {
+  switch (c) {
+    case '\'':
+    case '"':
+      return true;
+    default:
+      return false;
+  }
+}
+
+Token Lexer::parse_string(char quote) noexcept {
+    const char* start = m_beg;
+    get();
+    while (peek() != '\0') {
+        get();
+        if (peek() == quote) {
+            get();
+            return Token(Token::Kind::String, start, m_beg );
+        } else if (peek() == '\n') {
+            return Token(Token::Kind::Unexpected, start, m_beg + 1);
+        }
+    }
+    return Token(Token::Kind::String, start, m_beg);
 }
 
 Token Lexer::slash_or_comment() noexcept {
@@ -316,7 +351,7 @@ Token Lexer::equal_or_equals() noexcept {
     get();
     const char next = peek();
     if(*start == next) {
-        return Token(Token::Kind::Equals, start, next);
+        return Token(Token::Kind::Equals, start, 2);
     } else {
         return Token(Token::Kind::Equal, start, 1);
     }

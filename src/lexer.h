@@ -2,11 +2,13 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 class Token {
  public:
   enum class Kind {
     Number,
+    String,
     Identifier,
     LeftParen,
     RightParen,
@@ -38,6 +40,7 @@ class Token {
     Unary,
     End,
     Unexpected,
+
   };
 
   Token() : m_kind{Kind::Unexpected} {}
@@ -46,7 +49,7 @@ class Token {
 
   static std::string kind_to_string(Kind kind) {
       static const char* const names[]{
-              "Number",      "Identifier",  "LeftParen",  "RightParen", "LeftSquare",
+              "Number", "String",      "Identifier",  "LeftParen",  "RightParen", "LeftSquare",
               "RightSquare", "LeftCurly",   "RightCurly", "LessThan", "LessOrEquals",
               "GreaterThan", "GreaterOrEquals",
               "Equal",       "Plus",        "Minus",      "Asterisk",   "Slash",
@@ -58,7 +61,7 @@ class Token {
   }
 
   Token(Kind kind, const char* beg, std::size_t len) noexcept
-      : m_kind{kind}, m_lexeme(beg, len) {}
+      : m_kind{kind}, m_lexeme(beg, len), size(len) {}
 
   Token(Kind kind, const char* beg, const char* end) noexcept
       : m_kind{kind}, m_lexeme(beg, std::distance(beg, end)) {}
@@ -71,7 +74,7 @@ class Token {
   bool is(Kind kind) const noexcept { return m_kind == kind; }
 
   std::string to_string() {
-      return "Token " + kind_str() + "=" + lexeme();
+      return "Token " + kind_str() + " (" + std::to_string(this->line) + ":" + std::to_string(this->column) +") value: " + lexeme();
   }
 
   bool is_not(Kind kind) const noexcept { return m_kind != kind; }
@@ -85,9 +88,12 @@ class Token {
 
   std::string lexeme() const noexcept { return m_lexeme; }
 
+  unsigned long line = 1;
+  unsigned long column = 1;
   void lexeme(std::string lexeme) noexcept {
     m_lexeme = std::move(lexeme);
   }
+  unsigned int size;
 
  private:
   Kind             m_kind{};
@@ -100,7 +106,7 @@ class Lexer {
   }
 
   Token next() noexcept;
-  static void test();
+  void test();
 
  private:
   Token identifier() noexcept;
@@ -110,6 +116,7 @@ class Lexer {
   Token math_or_binary_operator() noexcept;
   Token equal_or_equals() noexcept;
   Token atom(Token::Kind) noexcept;
+  Token parse_string(char quote) noexcept;
 
   char peek() const noexcept { return *m_beg; }
   char get() noexcept { return *m_beg++; }
