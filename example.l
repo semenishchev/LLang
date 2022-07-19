@@ -1,12 +1,12 @@
 // Example file how I see the language
 
 interface Human {}
-abstract class Obj {
+interface Obj {
     @Getter("checker") @Setter boolean checkLiving(int age)
 }
 
 @SomeMarker
-class Developer is Obj impl Human {
+class Developer impl Human, Obj {
     @Getter final String name
     @Getter("phoneNumber") @Setter String phoneNumber = null;
     public Developer(String name) {

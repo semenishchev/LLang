@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
             unsigned long position = 0;
             for (auto token = lexer.next(); !token.is_one_of(Token::Kind::End, Token::Kind::Unexpected); token = lexer.next()) {
                 if(token.is(Token::Kind::Unexpected)) {
-                    std::cout << "Unexpected token: " << token.lexeme() << " at line: " << token.line << " column: " << token.column << std::endl;git
+                    std::cout << "Unexpected token: " << token.lexeme() << " at line: " << token.line << " column: " << token.column << std::endl;
                     break;
                 }
                 token.line = line;

@@ -24,11 +24,13 @@ namespace ast {
     class TypenameAST : public ExprAST {
     public:
         TypenameAST(std::string name) : name(move(name)) {}
-        TypenameAST(std::string name, std::vector<ast::MemberExprAST> members) : name(move(name)), members(move(members)) {}
+        TypenameAST(std::string name, std::vector<std::unique_ptr<MemberExprAST>> members) : name(move(name)), members(move(members)) {}
         std::string name;
-        std::vector<MemberExprAST> members;
-        std::vector<MarkerExprAST> markers;
+        std::vector<std::unique_ptr<MemberExprAST>> members;
+        std::vector<std::unique_ptr<MarkerExprAST>> markers;
     };
+
+    class NullExprAST : public ExprAST {};
 
     class U8ExprAST : public TypenameAST {
     public:
@@ -99,22 +101,23 @@ namespace ast {
     enum Visibility {
         Public,
         Protected,
-        Private
+        Private,
+        None
     };
 
     class MemberExprAST : public ExprAST {
     public:
         Visibility visibility;
-        std::vector<MarkerExprAST> markers;
+        std::vector<std::unique_ptr<MarkerExprAST>> markers;
         MemberExprAST(Visibility visibility) : visibility(visibility) {}
     };
 
     class PrototypeAST : public MemberExprAST{
     public:
         std::string name;
-        TypenameAST return_type;
-        std::vector<std::pair<TypenameAST, std::string>> args;
-        PrototypeAST(Visibility visibility, TypenameAST return_type, std::string name, std::vector<std::pair<TypenameAST, std::string>> args)
+        std::unique_ptr<TypenameAST> return_type;
+        std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>> args;
+        PrototypeAST(Visibility visibility, std::unique_ptr<TypenameAST> return_type, std::string name, std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>> args)
                 : MemberExprAST(visibility), return_type(std::move(return_type)), name(move(name)), args(move(args)) {}
 
         const std::string &getName() const { return name; }
@@ -138,27 +141,31 @@ namespace ast {
     class InterfaceExprAST : public TypenameAST {
     public:
         std::string name;
-        std::vector<InterfaceExprAST> implements;
-        InterfaceExprAST(std::string name, std::vector<MemberExprAST> members) : name(move(name)), TypenameAST(move(name), move(members)) {}
-        InterfaceExprAST(std::string name, std::vector<MemberExprAST> members, std::vector<InterfaceExprAST> implements)
-        : name(move(name)), TypenameAST(move(name), move(members)), implements(move(implements)) {}
+        std::vector<std::unique_ptr<InterfaceExprAST>> implements;
+        std::vector<std::unique_ptr<MemberExprAST>> members;
+        InterfaceExprAST(std::string name, std::vector<std::unique_ptr<MemberExprAST>> members) : name(move(name)), TypenameAST(move(name)), members(move(members)) {}
+        InterfaceExprAST(std::string name, std::vector<std::unique_ptr<MemberExprAST>> members, std::vector<std::unique_ptr<InterfaceExprAST>> implements)
+        : name(move(name)), TypenameAST(move(name)), members(move(members)), implements(move(implements)) {}
     };
 
     class ClassExprAST : public TypenameAST {
     public:
         ClassExprAST* superclass;
-        std::vector<InterfaceExprAST> implements;
-        bool is_abstract = false;
-        ClassExprAST(std::string name, std::vector<MemberExprAST> members, ClassExprAST& superclass) : TypenameAST(move(name), move(members)), superclass(&superclass) {}
-        ClassExprAST(std::string name, std::vector<MemberExprAST> members, ClassExprAST& superclass, std::vector<InterfaceExprAST> implements)
+        std::vector<std::unique_ptr<InterfaceExprAST>> implements;
+        std::vector<std::unique_ptr<MemberExprAST>> members;
+        std::vector<std::unique_ptr<MarkerExprAST>> markers;
+        ClassExprAST() : TypenameAST("object"), superclass(nullptr) {}
+        ClassExprAST(std::string name, std::vector<std::unique_ptr<MemberExprAST>> members, ClassExprAST& superclass) : TypenameAST(move(name)), members(move(members)), superclass(&superclass) {}
+        ClassExprAST(std::string name, std::vector<std::unique_ptr<MemberExprAST>> members, ClassExprAST* superclass) : TypenameAST(move(name)), members(move(members)), superclass(superclass) {}
+        ClassExprAST(std::string name, std::vector<std::unique_ptr<MemberExprAST>> members, ClassExprAST& superclass, std::vector<std::unique_ptr<InterfaceExprAST>> implements)
         : TypenameAST(move(name), move(members)), superclass(&superclass), implements(move(implements)) {}
     };
 
     class OutsideImplementsAST : public ExprAST {
     public:
-        ClassExprAST class_;
-        InterfaceExprAST interface_;
-        OutsideImplementsAST(ClassExprAST& class_, InterfaceExprAST& interface_) : class_(class_), interface_(interface_) {}
+        std::unique_ptr<ClassExprAST> class_;
+        std::unique_ptr<InterfaceExprAST> interface_;
+        OutsideImplementsAST(std::unique_ptr<ClassExprAST> class_, std::unique_ptr<InterfaceExprAST> interface_) : class_(std::move(class_)), interface_(std::move(interface_)) {}
     };
 
     class VariableExprAST : public ExprAST {
@@ -195,4 +202,7 @@ namespace ast {
                     std::vector<ExprAST> args)
                 : callee(move(Callee)), args(move(args)) {}
     };
+
+    static ClassExprAST* object = new ClassExprAST();
 }
+
