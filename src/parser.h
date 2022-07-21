@@ -128,6 +128,24 @@ namespace ast {
                 }
                 required_types.push_back(current.lexeme());
                 type = type == nullptr ? std::make_unique<TypenameAST>(current.lexeme()) : std::move(type);
+                current = get_next_token();
+                if(current.is_not(Token::Kind::Identifier)) {
+                    error(current, Token::Kind::Identifier);
+                    return nullptr;
+                }
+
+                std::string name = current.lexeme();
+                if(contains(keywords, name)) {
+                    error(current, "Unexpected keyword");
+                    return nullptr;
+                }
+
+                current = get_next_token();
+                if(current.is(Token::Kind::LeftParen)) { // method
+                    std::unique_ptr<MethodExprAST> result = std::make_unique<MethodExprAST>(visibility, std::move(type), name);
+                } else { // field
+                    return std::make_unique<FieldExprAST>(visibility, std::move(type), name);
+                }
 
             } else {
                 error(current, Token::Kind::Identifier);

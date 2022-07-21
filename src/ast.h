@@ -129,13 +129,18 @@ namespace ast {
     public:
         std::unique_ptr<PrototypeAST> proto;
         std::unique_ptr<ExprAST> body;
+
+        MethodExprAST(std::string name, Visibility visibility, std::unique_ptr<TypenameAST> return_type)
+        : MemberExprAST(visibility), proto() {
+            *proto = std::move(std::make_unique<PrototypeAST>(visibility, std::move(return_type), std::move(name), std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>>()));
+        }
     };
 
     class FieldExprAST : public MemberExprAST {
     public:
-        TypenameAST type;
+        std::unique_ptr<TypenameAST> type;
         std::string name;
-        FieldExprAST(Visibility visibility, TypenameAST type, std::string name) : MemberExprAST(visibility), type(std::move(type)), name(move(name)) {}
+        FieldExprAST(Visibility visibility, std::unique_ptr<TypenameAST> type, std::string name) : MemberExprAST(visibility), type(std::move(type)), name(move(name)) {}
     };
 
     class InterfaceExprAST : public TypenameAST {
