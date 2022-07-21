@@ -108,32 +108,32 @@ namespace ast {
     class MemberExprAST : public ExprAST {
     public:
         Visibility visibility;
+        bool is_static = false;
         std::vector<std::unique_ptr<MarkerExprAST>> markers;
         MemberExprAST(Visibility visibility) : visibility(visibility) {}
     };
 
-    class PrototypeAST : public MemberExprAST{
-    public:
-        std::string name;
-        std::unique_ptr<TypenameAST> return_type;
-        std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>> args;
-        PrototypeAST(Visibility visibility, std::unique_ptr<TypenameAST> return_type, std::string name, std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>> args)
-                : MemberExprAST(visibility), return_type(std::move(return_type)), name(move(name)), args(move(args)) {}
+    // class PrototypeAST : public MemberExprAST{
+    // public:
+    //     std::string name;
+    //     std::unique_ptr<TypenameAST> return_type;
+    //     std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>> args;
+    //     PrototypeAST(Visibility visibility, std::unique_ptr<TypenameAST> return_type, std::string name, std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>> args)
+    //             : MemberExprAST(visibility), return_type(std::move(return_type)), name(move(name)), args(move(args)) {}
 
-        const std::string &getName() const { return name; }
-    };
+    //     const std::string &getName() const { return name; }
+    // };
 
 /// FunctionAST - This class represents a function definition itself.
 
     class MethodExprAST : public MemberExprAST {
     public:
-        std::unique_ptr<PrototypeAST> proto;
+        std::string name;
+        std::unique_ptr<TypenameAST> return_type;
         std::unique_ptr<ExprAST> body;
-
-        MethodExprAST(std::string name, Visibility visibility, std::unique_ptr<TypenameAST> return_type)
-        : MemberExprAST(visibility), proto() {
-            *proto = std::move(std::make_unique<PrototypeAST>(visibility, std::move(return_type), std::move(name), std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>>()));
-        }
+        std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>> args;
+        MethodExprAST(Visibility visibility, std::unique_ptr<TypenameAST> return_type, std::string name, std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>> args)
+                : MemberExprAST(visibility), return_type(std::move(return_type)), name(move(name)), args(move(args)), body(nullptr) {}
     };
 
     class FieldExprAST : public MemberExprAST {

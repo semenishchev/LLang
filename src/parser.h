@@ -142,7 +142,7 @@ namespace ast {
 
                 current = get_next_token();
                 if(current.is(Token::Kind::LeftParen)) { // method
-                    std::unique_ptr<MethodExprAST> result = std::make_unique<MethodExprAST>(visibility, std::move(type), name);
+                    std::unique_ptr<MethodExprAST> result = std::make_unique<MethodExprAST>(visibility, std::move(type), name, std::vector<std::pair<std::unique_ptr<TypenameAST>, std::string>>());
                 } else { // field
                     return std::make_unique<FieldExprAST>(visibility, std::move(type), name);
                 }
