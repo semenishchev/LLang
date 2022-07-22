@@ -70,6 +70,15 @@ namespace ast {
             return nullptr;
         }
 
+        std::unique_ptr<ExprAST> parse_expression() {
+            Token current = get_current_token();
+            if(current.is_not(Token::Kind::Identifier) || current.is_not(Token::Kind::LeftSquare) || current.is_not(T)) {
+                error(get_current_token(), Token::Kind::Identifier, Token::Kind::LeftSquare);
+                
+            }
+            return nullptr;
+        }
+
         std::unique_ptr<ExprAST> parse_class(std::vector<std::unique_ptr<MarkerExprAST>>& markers) {
             Token name_token = get_next_token();
             if(name_token.is(Token::Kind::Identifier)) {
